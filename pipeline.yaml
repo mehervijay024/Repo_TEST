@@ -28,8 +28,6 @@ pipeline:
                   name: Execute Python Script
                   identifier: run_python
                   spec:
-                    # ❌ Remove connectorRef because it forces Harness internal registry
-                    # ✅ Use direct image from Docker Hub
                     image: docker.io/python:3.11
                     shell: Sh
                     command: |-
@@ -37,18 +35,17 @@ pipeline:
                       if [ -f requirements.txt ]; then
                         pip install -r requirements.txt
                       fi
- 
+
                       echo "Running Python script..."
                       python3 trigger_dataflow.py
                       echo "✅ Python script completed successfully!"
-          infrastructure:
-            type: KubernetesDirect
+          platform:
+            os: Linux
+            arch: Arm64
+          runtime:
+            type: Docker
             spec:
-              connectorRef: harness-public
-              namespace: docker-delegate
-              automountServiceAccountToken: true
-              nodeSelector: {}
-              os: Linux
+              harnessImageConnectorRef: account.harnessImage
         failureStrategies:
           - onFailure:
               errors:
