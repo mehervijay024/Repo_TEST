@@ -1,0 +1,57 @@
+pipeline:
+  name: run_python_script
+  identifier: run_python_script
+  projectIdentifier: default_project
+  orgIdentifier: default
+  tags: {}
+  properties:
+    ci:
+      codebase:
+        connectorRef: dataops
+        repoName: harness
+        build:
+          type: branch
+          spec:
+            branch: main
+  stages:
+    - stage:
+        name: Run Python Script
+        identifier: run_python_stage
+        description: Clone GitHub repo and execute Python script
+        type: CI
+        spec:
+          cloneCodebase: true
+          execution:
+            steps:
+              - step:
+                  type: Run
+                  name: Execute Python Script
+                  identifier: run_python
+                  spec:
+                    # ❌ Remove connectorRef because it forces Harness internal registry
+                    # ✅ Use direct image from Docker Hub
+                    image: docker.io/python:3.11
+                    shell: Sh
+                    command: |-
+                      echo "Installing dependencies if requirements.txt exists..."
+                      if [ -f requirements.txt ]; then
+                        pip install -r requirements.txt
+                      fi
+ 
+                      echo "Running Python script..."
+                      python3 trigger_dataflow.py
+                      echo "✅ Python script completed successfully!"
+          infrastructure:
+            type: KubernetesDirect
+            spec:
+              connectorRef: harness-public
+              namespace: docker-delegate
+              automountServiceAccountToken: true
+              nodeSelector: {}
+              os: Linux
+        failureStrategies:
+          - onFailure:
+              errors:
+                - AllErrors
+              action:
+                type: StageRollback
