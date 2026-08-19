@@ -28,7 +28,8 @@ pipeline:
                   name: Execute Python Script
                   identifier: run_python
                   spec:
-                    image: docker.io/python:3.11
+                    connectorRef: Docker_REG
+                    image: kalyanachakravarthi76/harness:3.10
                     shell: Sh
                     command: |-
                       echo "Installing dependencies if requirements.txt exists..."
