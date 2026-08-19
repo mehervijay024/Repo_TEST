@@ -3,7 +3,8 @@ pipeline:
   identifier: Pipeline
   projectIdentifier: default_project
   orgIdentifier: default
-  tags: {}
+  tags:
+    ai_generated: ""
   properties:
     ci:
       codebase:
@@ -16,6 +17,12 @@ pipeline:
         identifier: Test_Stage
         description: ""
         type: CI
+        failureStrategies:
+          - onFailure:
+              errors:
+                - AllErrors
+              action:
+                type: MarkAsFailure
         spec:
           cloneCodebase: true
           caching:
@@ -42,8 +49,6 @@ pipeline:
                     shell: Sh
                     command: |-
                       echo "Installing dependencies if requirements.txt exists..."
-                       
-                       
                       echo "Running Python script..."
                       python3 trigger_dataflow.py
-                      echo "✅ Python script completed successfully!"
+                      echo "Python script completed successfully!"
