@@ -8,7 +8,7 @@ pipeline:
   properties:
     ci:
       codebase:
-        connectorRef: DataOps_Github
+        connectorRef: _docker_delegate
         repoName: Test_GIT
         build: <+input>
   stages:
