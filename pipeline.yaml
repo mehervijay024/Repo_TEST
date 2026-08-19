@@ -1,13 +1,13 @@
 pipeline:
   name: run_python_script
-  identifier: run_python_script
+  identifier: Pipeline
   projectIdentifier: default_project
   orgIdentifier: default
   tags: {}
   properties:
     ci:
       codebase:
-        connectorRef: dataops
+        connectorRef: DataOps_Github
         repoName: harness
         build:
           type: branch
@@ -38,7 +38,7 @@ pipeline:
 
                       echo "Running Python script..."
                       python3 trigger_dataflow.py
-                      echo "✅ Python script completed successfully!"
+                      echo "Python script completed successfully!"
           platform:
             os: Linux
             arch: Arm64
