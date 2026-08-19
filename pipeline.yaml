@@ -29,11 +29,21 @@ pipeline:
           runtime:
             type: Docker
             spec:
-              harnessImageConnectorRef: account.harnessImage
+              harnessImageConnectorRef: Docker_REG
           execution:
             steps:
               - step:
                   type: Run
                   name: Run_1
                   identifier: Run_1
-                  spec: {}
+                  spec:
+                    connectorRef: Docker_REG
+                    image: kalyanachakravarthi76/harness:3.10
+                    shell: Sh
+                    command: |-
+                      echo "Installing dependencies if requirements.txt exists..."
+                       
+                       
+                      echo "Running Python script..."
+                      python3 trigger_dataflow.py
+                      echo "✅ Python script completed successfully!"
